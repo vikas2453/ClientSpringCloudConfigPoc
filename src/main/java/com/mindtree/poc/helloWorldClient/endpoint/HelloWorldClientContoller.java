@@ -1,6 +1,7 @@
 package com.mindtree.poc.helloWorldClient.endpoint;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,12 +12,18 @@ import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Data
+@Slf4j
 public class HelloWorldClientContoller {
 	
+		
 	private static String helloWorldBaseURL; 
+	
+	@Value("${helloWorldInstance}")
+	private static String helloWorldInstance;
 	
 	@Autowired
 	private RestTemplate restTemplate;
@@ -39,7 +46,8 @@ public class HelloWorldClientContoller {
 	public  String getBaseURL() {
 		//here we pass name of the application
 		// second argument is if server are secure
-		InstanceInfo instanceInfo = eurekaClient.getNextServerFromEureka("helloWorld", false);
+		log.info("helloWorldInstance is "+helloWorldInstance);
+		InstanceInfo instanceInfo = eurekaClient.getNextServerFromEureka("HelloWorld", false);
 		helloWorldBaseURL = instanceInfo.getHomePageUrl();
 		return helloWorldBaseURL;
 		
